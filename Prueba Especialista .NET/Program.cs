@@ -15,6 +15,9 @@ builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IVisitRepository, VisitRepository>();
 builder.Services.AddScoped<ICommercialRepository, CommercialRepository>();
 builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<ICommercialService, CommercialService>();
+builder.Services.AddScoped<IVisitService, VisitService>();
+
 
 
 

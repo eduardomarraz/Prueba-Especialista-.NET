@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Prueba_Especialista_.NET.Controllers
 {
-    public class VisitsController : Controller
+    public class VisitsController2 : Controller
     {
         private readonly IVisitService _visitService;
 
-        public VisitsController(IVisitService visitService)
+        public VisitsController2(IVisitService visitService)
         {
             _visitService = visitService;
         }

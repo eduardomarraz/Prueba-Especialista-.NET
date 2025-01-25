@@ -4,11 +4,11 @@ using System.Diagnostics;
 
 namespace Prueba_Especialista_.NET.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController2 : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeController2> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController2(ILogger<HomeController2> logger)
         {
             _logger = logger;
         }

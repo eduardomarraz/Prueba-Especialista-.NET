@@ -22,7 +22,7 @@ namespace Prueba_Especialista_.NET.Services
             return await _commercialRepository.GetAllAsync();
         }
 
-        public async Task<Commercial> GetCommercialtByIdAsync(Guid id)
+        public async Task<Commercial> GetCommercialByIdAsync(Guid id)
         {
             // Verificación extra si procede
             return await _commercialRepository.GetByIdAsync(id);

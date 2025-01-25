@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Prueba_Especialista_.NET.Controllers
 {
-    public class CommercialsController : Controller
+    public class CommercialsController2 : Controller
     {
         private readonly ICommercialService _commercialService;
 
-        public CommercialsController(ICommercialService commercialService)
+        public CommercialsController2(ICommercialService commercialService)
         {
             _commercialService = commercialService;
         }

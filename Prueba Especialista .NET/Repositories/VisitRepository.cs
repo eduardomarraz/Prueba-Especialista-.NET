@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Prueba_Especialista_.NET.Repositories
 {
-    public class VisitRepository
+    public class VisitRepository : IVisitRepository
     {
         private readonly VisitsDbContext _context;
 

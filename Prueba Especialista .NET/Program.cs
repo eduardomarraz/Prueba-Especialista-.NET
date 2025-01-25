@@ -23,6 +23,11 @@ builder.Services.AddScoped<IVisitService, VisitService>();
 
 var app = builder.Build();
 
+//Configuracion BD
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<VisitsDbContext>(options =>
+    options.UseSqlServer(connectionString));
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

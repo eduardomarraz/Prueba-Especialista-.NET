@@ -18,7 +18,10 @@ namespace Prueba_Especialista_.NET.Repositories
 
         public async Task<List<Visit>> GetAllAsync()
         {
-            return await _context.Visits.ToListAsync();
+            return await _context.Visits
+    .Include(v => v.Client)
+    .Include(v => v.Commercial)
+    .ToListAsync();
         }
 
         public async Task<Visit> GetByIdAsync(Guid id)

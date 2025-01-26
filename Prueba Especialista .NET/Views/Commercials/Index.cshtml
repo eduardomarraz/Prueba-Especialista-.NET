@@ -1,0 +1,35 @@
+﻿@model List<Prueba_Especialista_.NET.Models.Commercial>
+
+@{
+    ViewData["Title"] = "Listado de Comerciales";
+}
+
+<h1>Gestión de Comerciales</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Crear nuevo</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var commercial in Model)
+        {
+            <tr>
+                <td>@commercial.Name</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@commercial.CommercialId" class="btn btn-warning">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@commercial.CommercialId" class="btn btn-info">Detalles</a> |
+                    <form asp-action="Delete" asp-route-id="@commercial.CommercialId" method="post" style="display:inline">
+                        <button type="submit" class="btn btn-danger">Borrar</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

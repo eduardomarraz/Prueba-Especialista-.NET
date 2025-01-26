@@ -9,7 +9,12 @@ using Prueba_Especialista_.NET.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Mover la configuración de la BD aquí
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<VisitsDbContext>(options =>
+    options.UseSqlServer(connectionString));
+
+// Después registra controladores, repositorios y servicios
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IVisitRepository, VisitRepository>();
@@ -18,15 +23,7 @@ builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<ICommercialService, CommercialService>();
 builder.Services.AddScoped<IVisitService, VisitService>();
 
-
-
-
 var app = builder.Build();
-
-//Configuracion BD
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<VisitsDbContext>(options =>
-    options.UseSqlServer(connectionString));
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

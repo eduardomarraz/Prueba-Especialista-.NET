@@ -2,7 +2,15 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="jumbotron text-center" style="margin-top: 50px;">
+    <h1 class="display-4">Bienvenido a ACME</h1>
+    <p class="lead">Gestiona fácilmente Clientes, Comerciales y Visitas</p>
+    <hr class="my-4" />
+    <p class="mb-4">Elige la sección a la que quieras acceder:</p>
+
+    <div class="btn-group" role="group" aria-label="Secciones de ACME">
+        <a class="btn btn-primary" href="/Clients">Clientes</a>
+        <a class="btn btn-info" href="/Commercials">Comerciales</a>
+        <a class="btn btn-success" href="/Visits">Visitas</a>
+    </div>
 </div>

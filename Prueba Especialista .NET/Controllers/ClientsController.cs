@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Prueba_Especialista_.NET.Controllers
 {
-    public class ClientsController2 : Controller
+    public class ClientsController : Controller
     {
         private readonly IClientService _clientService;
 
-        public ClientsController2(IClientService clientService)
+        public ClientsController(IClientService clientService)
         {
             _clientService = clientService;
         }
@@ -52,6 +52,14 @@ namespace Prueba_Especialista_.NET.Controllers
             }
 
             return View(client); // Muestra el formulario de edición
+        }
+
+        // GET: Clients/Details/
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var client = await _clientService.GetClientByIdAsync(id);
+            if (client == null) return NotFound();
+            return View(client);
         }
 
         // POST: Clients/Edit/{id}

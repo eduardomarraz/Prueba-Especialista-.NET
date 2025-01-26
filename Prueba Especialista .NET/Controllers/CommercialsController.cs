@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Prueba_Especialista_.NET.Controllers
 {
-    public class CommercialsController2 : Controller
+    public class CommercialsController : Controller
     {
         private readonly ICommercialService _commercialService;
 
-        public CommercialsController2(ICommercialService commercialService)
+        public CommercialsController(ICommercialService commercialService)
         {
             _commercialService = commercialService;
         }
@@ -52,6 +52,15 @@ namespace Prueba_Especialista_.NET.Controllers
             }
 
             return View(commercial); // Muestra el formulario de edición
+        }
+
+        // GET: Commercials/Details/{id}
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var commercial = await _commercialService.GetCommercialByIdAsync(id);
+            if (commercial == null) return NotFound();
+
+            return View(commercial);
         }
 
         // POST: Commercials/Edit/{id}

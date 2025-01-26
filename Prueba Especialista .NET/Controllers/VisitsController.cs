@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Prueba_Especialista_.NET.Controllers
 {
-    public class VisitsController2 : Controller
+    public class VisitsController : Controller
     {
         private readonly IVisitService _visitService;
 
-        public VisitsController2(IVisitService visitService)
+        public VisitsController(IVisitService visitService)
         {
             _visitService = visitService;
         }
@@ -53,6 +53,16 @@ namespace Prueba_Especialista_.NET.Controllers
 
             return View(visit); // Muestra el formulario de edición
         }
+
+        // GET: Visits/Details/{id}
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var visit = await _visitService.GetVisitByIdAsync(id);
+            if (visit == null) return NotFound();
+
+            return View(visit);
+        }
+
 
         // POST: Visits/Edit/{id}
         [HttpPost]

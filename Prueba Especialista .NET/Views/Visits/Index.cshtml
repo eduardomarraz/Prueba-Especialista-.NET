@@ -9,45 +9,33 @@
 <p>
     <a asp-action="Create" class="btn btn-primary">Crear nueva visita</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.DateVisit)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Notes)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Client)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Commercial)
-            </th>
-            <th></th>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>Comercial</th>
+            <th>Notas</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateVisit)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Notes)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Client.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Commercial.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.VisitId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.VisitId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.VisitId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var v in Model)
+        {
+<tr>
+                <td>@v.DateVisit.ToShortDateString()</td>
+                <td>@v.Client?.Name</td>
+                <td>@v.Commercial?.Name</td>
+                <td>@v.Notes</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@v.VisitId" class="btn btn-warning">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@v.VisitId" class="btn btn-info">Detalles</a> |
+                    <form asp-action="Delete" asp-route-id="@v.VisitId" method="post" style="display:inline">
+                        <button type="submit" class="btn btn-danger">Borrar</button>
+                    </form>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

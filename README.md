@@ -49,6 +49,30 @@ ACME is a company selling office products. The marketing department’s sales re
   - **Delete**: Remove record (often via a POST form)
   - **Details**: Optional page showing entity details
 
+### 4. Recent Changes
+
+- **The following changes have been implemented to improve the functionality of the **Visits** module:
+
+- **Creation of a ViewModel `VisitsCreateEditViewModel`**:
+  - Facilitates data transfer between the controller and views.
+  - Includes selection lists for clients and commercials (`ClientsSelectList`, `CommercialsSelectList`).
+  - Hosts the `Visit` entity for creation and editing forms.
+
+- **Integration of the Service Layer Pattern**:
+  - The `VisitsController` uses services (`IVisitService`, `IClientService`, `ICommercialService`) to interact with the lower layers.
+  - Direct access to the `DbContext` was removed from controllers, ensuring cleaner and more consistent code.
+
+- **Improvements in `Create.cshtml` and `Edit.cshtml` Views**:
+  - Dropdown lists (`<select>`) were added to select the client and the commercial when creating or editing a visit.
+  - The lists are dynamically generated from the data retrieved by the services.
+
+- **Modifications in the `Visit` Repository**:
+  - The `GetAllAsync` method includes relationships with `Client` and `Commercial` using `Include`, enabling the display of client and commercial names in the list view (`Index`).
+
+- **Validation in Forms**:
+  - Validation error handling in the `Create` and `Edit` methods. If the model is invalid, the dropdown lists are reloaded, and the corresponding error messages are displayed.
+
+
 ## Design Decisions
 
 ### Multi-Layer Architecture

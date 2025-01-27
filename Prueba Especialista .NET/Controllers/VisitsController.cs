@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Prueba_Especialista_.NET.DbContexts;
 using Prueba_Especialista_.NET.Models;
 using Prueba_Especialista_.NET.Services;
+using Prueba_Especialista_.NET.ViewModels;
 using System;
 using System.Threading.Tasks;
 
@@ -9,10 +13,16 @@ namespace Prueba_Especialista_.NET.Controllers
     public class VisitsController : Controller
     {
         private readonly IVisitService _visitService;
+        private readonly IClientService _clientService;
+        private readonly ICommercialService _commercialService;
 
-        public VisitsController(IVisitService visitService)
+        public VisitsController(IVisitService visitService,
+        IClientService clientService,
+        ICommercialService commercialService)
         {
             _visitService = visitService;
+            _clientService = clientService;
+            _commercialService = commercialService;
         }
 
         // GET: Visits
@@ -23,36 +33,102 @@ namespace Prueba_Especialista_.NET.Controllers
         }
 
         // GET: Visits/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View(); // Muestra el formulario para crear una visita
+            var clients = await _clientService.GetAllClientsAsync();
+            var commercials = await _commercialService.GetAllCommercialsAsync();
+
+            var viewModel = new VisitsCreateEditViewModel
+            {
+                Visit = new Visit(),
+                ClientsSelectList = clients
+                    .Select(c => new SelectListItem
+                    {
+                        Value = c.ClientId.ToString(),
+                        Text = c.Name
+                    })
+                    .ToList(),
+                CommercialsSelectList = commercials
+                    .Select(com => new SelectListItem
+                    {
+                        Value = com.CommercialId.ToString(),
+                        Text = com.Name
+                    })
+                    .ToList()
+            };
+
+            return View(viewModel);
         }
 
         // POST: Visits/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Visit visit)
+        public async Task<IActionResult> Create(VisitsCreateEditViewModel viewModel)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _visitService.CreateVisitAsync(visit);
-                return RedirectToAction(nameof(Index)); // Redirige al listado tras crear
+                // Si hay error de validación, recargamos las listas y volvemos a la vista
+                var clients = await _clientService.GetAllClientsAsync();
+                var commercials = await _commercialService.GetAllCommercialsAsync();
+
+                viewModel.ClientsSelectList = clients
+                    .Select(c => new SelectListItem
+                    {
+                        Value = c.ClientId.ToString(),
+                        Text = c.Name
+                    })
+                    .ToList();
+                viewModel.CommercialsSelectList = commercials
+                    .Select(com => new SelectListItem
+                    {
+                        Value = com.CommercialId.ToString(),
+                        Text = com.Name
+                    })
+                    .ToList();
+
+                return View(viewModel);
             }
 
-            return View(visit); // Retorna al formulario si hay errores
+            // Guardamos la visita en la BD a través del servicio
+            await _visitService.CreateVisitAsync(viewModel.Visit);
+            return RedirectToAction(nameof(Index));
         }
+
 
         // GET: Visits/Edit/{id}
         public async Task<IActionResult> Edit(Guid id)
         {
             var visit = await _visitService.GetVisitByIdAsync(id);
             if (visit == null)
-            {
                 return NotFound();
-            }
 
-            return View(visit); // Muestra el formulario de edición
+            var clients = await _clientService.GetAllClientsAsync();
+            var commercials = await _commercialService.GetAllCommercialsAsync();
+
+            var viewModel = new VisitsCreateEditViewModel
+            {
+                Visit = visit,
+                ClientsSelectList = clients
+                    .Select(c => new SelectListItem
+                    {
+                        Value = c.ClientId.ToString(),
+                        Text = c.Name,
+                        Selected = (c.ClientId == visit.ClientId)
+                    })
+                    .ToList(),
+                CommercialsSelectList = commercials
+                    .Select(com => new SelectListItem
+                    {
+                        Value = com.CommercialId.ToString(),
+                        Text = com.Name,
+                        Selected = (com.CommercialId == visit.CommercialId)
+                    })
+                    .ToList()
+            };
+
+            return View(viewModel);
         }
+
 
         // GET: Visits/Details/{id}
         public async Task<IActionResult> Details(Guid id)
@@ -67,20 +143,41 @@ namespace Prueba_Especialista_.NET.Controllers
         // POST: Visits/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, Visit visit)
+        public async Task<IActionResult> Edit(Guid id, VisitsCreateEditViewModel viewModel)
         {
-            if (id != visit.VisitId)
+            if (id != viewModel.Visit.VisitId)
+                return BadRequest();
+
+            if (!ModelState.IsValid)
             {
-                return BadRequest(); // Asegura que el ID coincide
+                // Recargamos listas para mostrarlas en la vista si hay validación fallida
+                var clients = await _clientService.GetAllClientsAsync();
+                var commercials = await _commercialService.GetAllCommercialsAsync();
+
+                viewModel.ClientsSelectList = clients
+                    .Select(c => new SelectListItem
+                    {
+                        Value = c.ClientId.ToString(),
+                        Text = c.Name,
+                        Selected = (c.ClientId == viewModel.Visit.ClientId)
+                    })
+                    .ToList();
+
+                viewModel.CommercialsSelectList = commercials
+                    .Select(com => new SelectListItem
+                    {
+                        Value = com.CommercialId.ToString(),
+                        Text = com.Name,
+                        Selected = (com.CommercialId == viewModel.Visit.CommercialId)
+                    })
+                    .ToList();
+
+                return View(viewModel);
             }
 
-            if (ModelState.IsValid)
-            {
-                await _visitService.UpdateVisitAsync(visit);
-                return RedirectToAction(nameof(Index)); // Redirige al listado tras editar
-            }
-
-            return View(visit); // Retorna al formulario si hay errores
+            // Llamamos al servicio para que actualice la visita
+            await _visitService.UpdateVisitAsync(viewModel.Visit);
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Visits/Delete/{id}

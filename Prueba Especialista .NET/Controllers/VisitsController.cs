@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Prueba_Especialista_.NET.DbContexts;
 using Prueba_Especialista_.NET.Models;
 using Prueba_Especialista_.NET.Services;
@@ -15,14 +16,17 @@ namespace Prueba_Especialista_.NET.Controllers
         private readonly IVisitService _visitService;
         private readonly IClientService _clientService;
         private readonly ICommercialService _commercialService;
+        private readonly ILogger<VisitsController> _logger;
 
         public VisitsController(IVisitService visitService,
         IClientService clientService,
-        ICommercialService commercialService)
+        ICommercialService commercialService,
+        ILogger<VisitsController> logger)
         {
             _visitService = visitService;
             _clientService = clientService;
             _commercialService = commercialService;
+            _logger = logger;
         }
 
         // GET: Visits
@@ -65,9 +69,45 @@ namespace Prueba_Especialista_.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(VisitsCreateEditViewModel viewModel)
         {
+            Console.WriteLine("Donde se muestra los mensajes por consola jaja.");
             if (!ModelState.IsValid)
             {
-                // Si hay error de validación, recargamos las listas y volvemos a la vista
+                var clients = await _clientService.GetAllClientsAsync();
+                var commercials = await _commercialService.GetAllCommercialsAsync();
+
+                viewModel.ClientsSelectList = clients
+                    .Select(c => new SelectListItem
+                    {
+                        Value = c.ClientId.ToString(),
+                        Text = c.Name
+                    })
+                    .ToList();
+
+                viewModel.CommercialsSelectList = commercials
+                    .Select(com => new SelectListItem
+                    {
+                        Value = com.CommercialId.ToString(),
+                        Text = com.Name
+                    })
+                    .ToList();
+
+                return View(viewModel);
+            }
+
+            try
+            {
+                // Guardar la visita en la BD a través del servicio
+                await _visitService.CreateVisitAsync(viewModel.Visit);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                // Loguear el error
+                _logger.LogError(ex, "Error al guardar la visita.");
+
+                ModelState.AddModelError(string.Empty, "Ocurrió un error al guardar la visita.");
+
+                // Recargar listas antes de retornar la vista
                 var clients = await _clientService.GetAllClientsAsync();
                 var commercials = await _commercialService.GetAllCommercialsAsync();
 
@@ -88,12 +128,7 @@ namespace Prueba_Especialista_.NET.Controllers
 
                 return View(viewModel);
             }
-
-            // Guardamos la visita en la BD a través del servicio
-            await _visitService.CreateVisitAsync(viewModel.Visit);
-            return RedirectToAction(nameof(Index));
         }
-
 
         // GET: Visits/Edit/{id}
         public async Task<IActionResult> Edit(Guid id)

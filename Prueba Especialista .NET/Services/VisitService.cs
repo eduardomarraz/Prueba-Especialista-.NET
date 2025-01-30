@@ -28,6 +28,8 @@ namespace Prueba_Especialista_.NET.Services
 
         public async Task CreateVisitAsync(Visit visit)
         {
+            Console.WriteLine("Intentando guardar una visita en la base de datos.");
+            Console.WriteLine($"Fecha: {visit.DateVisit}, Cliente: {visit.ClientId}, Comercial: {visit.CommercialId}, Notas: {visit.Notes}");
             // Valida, por ejemplo, que la fecha de la visita no sea nula o esté en el futuro, etc.
             if (visit.DateVisit == default)
             {

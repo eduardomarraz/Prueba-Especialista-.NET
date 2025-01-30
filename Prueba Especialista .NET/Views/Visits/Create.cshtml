@@ -1,30 +1,37 @@
 ﻿@model Prueba_Especialista_.NET.ViewModels.VisitsCreateEditViewModel
 
 @{
-    ViewData["Title"] = "Crear Visita";
+    ViewData["Title"] = "Registrar Visita";
 }
 
-<h1>Crear Visita</h1>
+<h1>Registrar Visita</h1>
 
 <form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
     <div class="form-group">
-        <label asp-for="Visit.DateVisit"></label>
-        <input asp-for="Visit.DateVisit" type="date" class="form-control" />
+        @Html.LabelFor(model => model.Visit.DateVisit, htmlAttributes: new { @class = "control-label" })
+        <input asp-for="Visit.DateVisit" class="form-control" type="date" />
+
+        @Html.ValidationMessageFor(model => model.Visit.DateVisit, "", new { @class = "text-danger" })
     </div>
 
     <div class="form-group">
-        <label for="ClientId">Cliente</label>
-        <select asp-for="Visit.ClientId" asp-items="Model.ClientsSelectList" class="form-control"></select>
+        @Html.LabelFor(model => model.Visit.ClientId, "Cliente", htmlAttributes: new { @class = "control-label" })
+        @Html.DropDownListFor(model => model.Visit.ClientId, Model.ClientsSelectList, "Seleccione un cliente", new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Visit.ClientId, "", new { @class = "text-danger" })
     </div>
 
     <div class="form-group">
-        <label for="CommercialId">Comercial</label>
-        <select asp-for="Visit.CommercialId" asp-items="Model.CommercialsSelectList" class="form-control"></select>
+        @Html.LabelFor(model => model.Visit.CommercialId, "Comercial", htmlAttributes: new { @class = "control-label" })
+        @Html.DropDownListFor(model => model.Visit.CommercialId, Model.CommercialsSelectList, "Seleccione un comercial", new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Visit.CommercialId, "", new { @class = "text-danger" })
     </div>
 
     <div class="form-group">
-        <label asp-for="Visit.Notes"></label>
-        <textarea asp-for="Visit.Notes" class="form-control"></textarea>
+        @Html.LabelFor(model => model.Visit.Notes, htmlAttributes: new { @class = "control-label" })
+        @Html.TextAreaFor(model => model.Visit.Notes, new { @class = "form-control", rows = 4 })
+        @Html.ValidationMessageFor(model => model.Visit.Notes, "", new { @class = "text-danger" })
     </div>
 
     <button type="submit" class="btn btn-primary">Guardar</button>

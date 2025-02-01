@@ -69,9 +69,16 @@ namespace Prueba_Especialista_.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(VisitsCreateEditViewModel viewModel)
         {
-            Console.WriteLine("Donde se muestra los mensajes por consola jaja.");
             if (!ModelState.IsValid)
             {
+                foreach (var state in ModelState)
+                {
+                    foreach (var error in state.Value.Errors)
+                    {
+                        Console.WriteLine(
+                            $"Propiedad '{state.Key}' -> Error: {error.ErrorMessage}");
+                    }
+                }
                 var clients = await _clientService.GetAllClientsAsync();
                 var commercials = await _commercialService.GetAllCommercialsAsync();
 

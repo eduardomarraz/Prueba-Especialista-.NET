@@ -6,6 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Prueba_Especialista_.NET.Services;
+using System.Globalization;
+
+// Establecemos la cultura globalmente
+var cultureInfo = new CultureInfo("es-ES");
+CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
 var builder = WebApplication.CreateBuilder(args);
 

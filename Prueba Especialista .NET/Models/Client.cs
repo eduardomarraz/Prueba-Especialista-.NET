@@ -4,7 +4,6 @@ namespace Prueba_Especialista_.NET.Models
 {
     public class Client
 {
-    [Key]
     public Guid ClientId { get; set; } = Guid.NewGuid();
     [Required]
     [StringLength(100)]

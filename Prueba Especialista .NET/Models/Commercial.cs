@@ -4,7 +4,6 @@ namespace Prueba_Especialista_.NET.Models
 {
     public class Commercial
     {
-        [Key]
         public Guid CommercialId { get; set; }
 
         [Required(ErrorMessage = "El nombre del comercial es obligatorio.")]
